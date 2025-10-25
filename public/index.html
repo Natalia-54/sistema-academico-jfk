@@ -441,4 +441,28 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showError('Error de
+                showError('Error de conexión con el servidor');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+        
+        // Permitir login con Enter
+        document.addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                login();
+            }
+        });
+        
+        // Limpiar error al escribir
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('errorAlert').style.display = 'none';
+        });
+        
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('errorAlert').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
