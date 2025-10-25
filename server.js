@@ -54,7 +54,7 @@ const upload = multer({
 const dbConfig = {
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'Sebitasg2003',
     database: 'ie_john_f_kennedy'
 };
 
