@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IE John F. Kennedy - Mis Notas</title>
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --secondary-color: #8BC34A;
+            --accent-color: #FFC107;
+            --light-color: #FFFFFF;
+            --dark-color: #212121;
+            --border-color: #E0E0E0;
+            --text-secondary: #757575;
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #F44336;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F5F7FA;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .school-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .school-logo {
+            height: 50px;
+            margin-right: 15px;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .student-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-logout {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .btn-logout:hover {
+            background-color: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Tarjeta de información del estudiante */
+        .student-card {
+            background-color: var(--light-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .student-info h2 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+        
+        .student-details {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .student-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .student-detail i {
+            color: var(--primary-color);
+        }
+        
+        .student-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-light);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .student-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* Selector de período */
+        .period-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .period-btn {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--light-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .period-btn:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+        }
+        
+        .period-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+        }
+        
+        /* Estadísticas */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--light-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Tarjetas de notas */
+        .grades-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .grade-card {
+            background-color: var(--light-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .grade-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        .grade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .grade-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .grade-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+        }
+        
+        .grade-excellent {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 2px solid var(--success-color);
+        }
+        
+        .grade-good {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+            border: 2px solid var(--warning-color);
+        }
+        
+        .grade-poor {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+            border: 2px solid var(--danger-color);
+        }
+        
+        .grade-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .grade-detail {
+            padding: 0.8rem;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+        
+        .grade-detail:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+        
+        .grade-detail-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+        
+        .grade-detail-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        /* Tabla de notas detalladas */
+        .detailed-grades {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+        
+        /* Efectos de carga */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Badges para estados */
+        .badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .badge-danger {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .student-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .student-details {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .grades-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .grade-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .period-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="school-info">
+                <img src="logo-jfk.png" alt="Logo IE John F. Kennedy" class="school-logo">
+                <h1>IE John F. Kennedy - Mis Notas</h1>
+            </div>
+            <div class="student-controls">
+                <span id="studentName">Estudiante</span>
+                <button class="btn btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <div class="container">
+        <!-- Tarjeta de información del estudiante -->
+        <div class="student-card">
+            <div class="student-info">
+                <h2 id="studentFullName">Información Académica</h2>
+                <div class="student-details">
+                    <div class="student-detail">
+                        <i class="fas fa-user-graduate"></i>
+                        <span id="studentGrade">Cargando...</span>
+                    </div>
+                    <div class="student-detail">
+                        <i class="fas fa-id-card"></i>
+                        <span id="studentCode">Cargando...</span>
+                    </div>
+                    <div class="student-detail">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="schoolYear">Año Escolar 2025</span>
+                    </div>
+                    <div class="student-detail">
+                        <i class="fas fa-envelope"></i>
+                        <span id="studentEmail">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+            <img id="studentAvatar" src="https://ui-avatars.com/api/?name=Estudiante&background=4CAF50&color=fff&size=80" alt="Avatar" class="student-avatar">
+        </div>
+        
+        <!-- Estadísticas rápidas -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-value" id="promedioGeneral">0.0</div>
+                <div class="stat-label">Promedio General</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-value" id="materiasDestacadas">0</div>
+                <div class="stat-label">Asignaturas Destacadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-value" id="progresoPeriodo">0%</div>
+                <div class="stat-label">Progreso este período</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="stat-value" id="porcentajeAsistencia">0%</div>
+                <div class="stat-label">Asistencia</div>
+            </div>
+        </div>
+        
+        <!-- Selector de período -->
+        <div class="period-selector">
+            <button class="period-btn active" onclick="selectPeriod(1)">
+                <i class="fas fa-calendar-check"></i> Primer Período
+            </button>
+            <button class="period-btn" onclick="selectPeriod(2)">
+                <i class="fas fa-calendar-check"></i> Segundo Período
+            </button>
+            <button class="period-btn" onclick="selectPeriod(3)">
+                <i class="fas fa-calendar-check"></i> Tercer Período
+            </button>
+            <button class="period-btn" onclick="selectPeriod(4)">
+                <i class="fas fa-calendar-check"></i> Cuarto Período
+            </button>
+        </div>
+        
+        <!-- Lista de notas en tarjetas -->
+        <div class="grades-container" id="gradesCards">
+            <!-- Las tarjetas de notas se cargarán dinámicamente -->
+        </div>
+        
+        <!-- Tabla de notas detalladas -->
+        <div class="detailed-grades">
+            <h2 class="section-title">
+                <i class="fas fa-list-alt"></i> Detalle de Calificaciones
+            </h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Tipo Evaluación</th>
+                            <th>Calificación</th>
+                            <th>Peso</th>
+                            <th>Profesor</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaDetallesNotas">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                                <div class="loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Cargando calificaciones...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 Institución Educativa John F. Kennedy - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Variables globales
+        let currentUser = null;
+        let currentPeriod = 1;
+        let notas = [];
+        let estadisticas = {};
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        // Verificar autenticación
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user');
+                if (!response.ok) {
+                    window.location.href = '/';
+                    return;
+                }
+                currentUser = await response.json();
+                
+                if (currentUser.tipo !== 'estudiante') {
+                    window.location.href = '/';
+                    return;
+                }
+                
+                // Actualizar información del estudiante
+                document.getElementById('studentName').textContent = currentUser.nombres;
+                document.getElementById('studentFullName').textContent = `${currentUser.nombres} ${currentUser.apellidos}`;
+                document.getElementById('studentCode').textContent = currentUser.codigo;
+                document.getElementById('studentEmail').textContent = currentUser.email || 'No especificado';
+                
+                // Actualizar avatar
+                if (currentUser.foto_url) {
+                    document.getElementById('studentAvatar').src = currentUser.foto_url;
+                } else {
+                    document.getElementById('studentAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.nombres + ' ' + currentUser.apellidos)}&background=4CAF50&color=fff&size=80`;
+                }
+                
+                // Cargar datos iniciales
+                await cargarNotas();
+                await cargarEstadisticas();
+                
+            } catch (error) {
+                console.error('Error verificando autenticación:', error);
+                window.location.href = '/';
+            }
+        }
+
+        // Cargar notas del estudiante
+        async function cargarNotas() {
+            try {
+                // En un sistema real, esto vendría de la API
+                // Por ahora simulamos datos de ejemplo
+                
+                showLoading();
+                
+                setTimeout(() => {
+                    // Datos de ejemplo para el primer período
+                    if (currentPeriod === 1) {
+                        notas = [
+                            {
+                                materia: 'Matemáticas',
+                                calificacion: 16.5,
+                                detalles: [
+                                    { tipo: 'Examen Parcial', calificacion: 16.0, peso: 30, profesor: 'María Rodríguez', fecha: '2025-03-15' },
+                                    { tipo: 'Trabajos Prácticos', calificacion: 17.0, peso: 20, profesor: 'María Rodríguez', fecha: '2025-03-20' },
+                                    { tipo: 'Participación', calificacion: 18.0, peso: 10, profesor: 'María Rodríguez', fecha: '2025-03-25' }
+                                ]
+                            },
+                            {
+                                materia: 'Lenguaje y Comunicación',
+                                calificacion: 15.0,
+                                detalles: [
+                                    { tipo: 'Examen Parcial', calificacion: 14.5, peso: 30, profesor: 'Carlos Mendoza', fecha: '2025-03-16' },
+                                    { tipo: 'Trabajos Prácticos', calificacion: 15.5, peso: 20, profesor: 'Carlos Mendoza', fecha: '2025-03-21' },
+                                    { tipo: 'Participación', calificacion: 16.0, peso: 10, profesor: 'Carlos Mendoza', fecha: '2025-03-26' }
+                                ]
+                            },
+                            {
+                                materia: 'Ciencias Naturales',
+                                calificacion: 17.2,
+                                detalles: [
+                                    { tipo: 'Examen Parcial', calificacion: 17.0, peso: 30, profesor: 'Ana García', fecha: '2025-03-17' },
+                                    { tipo: 'Trabajos Prácticos', calificacion: 17.5, peso: 20, profesor: 'Ana García', fecha: '2025-03-22' },
+                                    { tipo: 'Participación', calificacion: 17.0, peso: 10, profesor: 'Ana García', fecha: '2025-03-27' }
+                                ]
+                            },
+                            {
+                                materia: 'Historia y Geografía',
+                                calificacion: 14.8,
+                                detalles: [
+                                    { tipo: 'Examen Parcial', calificacion: 14.0, peso: 30, profesor: 'Luis Hernández', fecha: '2025-03-18' },
+                                    { tipo: 'Trabajos Prácticos', calificacion: 15.5, peso: 20, profesor: 'Luis Hernández', fecha: '2025-03-23' },
+                                    { tipo: 'Participación', calificacion: 16.0, peso: 10, profesor: 'Luis Hernández', fecha: '2025-03-28' }
+                                ]
+                            },
+                            {
+                                materia: 'Inglés',
+                                calificacion: 16.8,
+                                detalles: [
+                                    { tipo: 'Examen Parcial', calificacion: 16.5, peso: 30, profesor: 'Laura Martínez', fecha: '2025-03-19' },
+                                    { tipo: 'Trabajos Prácticos', calificacion: 17.0, peso: 20, profesor: 'Laura Martínez', fecha: '2025-03-24' },
+                                    { tipo: 'Participación', calificacion: 17.5, peso: 10, profesor: 'Laura Martínez', fecha: '2025-03-29' }
+                                ]
+                            },
+                            {
+                                materia: 'Educación Física',
+                                calificacion: 18.5,
+                                detalles: [
+                                    { tipo: 'Evaluación Práctica', calificacion: 19.0, peso: 50, profesor: 'Roberto Silva', fecha: '2025-03-20' },
+                                    { tipo: 'Participación', calificacion: 18.0, peso: 50, profesor: 'Roberto Silva', fecha: '2025-03-25' }
+                                ]
+                            }
+                        ];
+                    } else {
+                        // Para otros períodos, mostramos datos vacíos o diferentes
+                        notas = [];
+                    }
+                    
+                    actualizarInterfaz();
+                    
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error cargando notas:', error);
+                showError('Error al cargar las calificaciones');
+            }
+        }
+
+        // Cargar estadísticas
+        async function cargarEstadisticas() {
+            try {
+                // Simular carga de estadísticas
+                estadisticas = {
+                    promedioGeneral: 16.3,
+                    materiasDestacadas: 3,
+                    progresoPeriodo: 75,
+                    porcentajeAsistencia: 92
+                };
+                
+                actualizarEstadisticas();
+                
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+            }
+        }
+
+        // Seleccionar período
+        function selectPeriod(period) {
+            currentPeriod = period;
+            
+            // Actualizar botones
+            const buttons = document.querySelectorAll('.period-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            const selectedBtn = event.target;
+            selectedBtn.classList.add('active');
+            
+            // Animación de selección
+            selectedBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                selectedBtn.style.transform = '';
+            }, 200);
+            
+            // Recargar notas para el período seleccionado
+            cargarNotas();
+        }
+
+        // Actualizar interfaz
+        function actualizarInterfaz() {
+            actualizarTarjetasNotas();
+            actualizarTablaDetalles();
+        }
+
+        // Actualizar tarjetas de notas
+        function actualizarTarjetasNotas() {
+            const container = document.getElementById('gradesCards');
+            
+            if (notas.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>No hay calificaciones registradas</h3>
+                        <p>No se encontraron calificaciones para el período seleccionado</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            notas.forEach(nota => {
+                const card = document.createElement('div');
+                card.className = 'grade-card';
+                
+                // Determinar clase CSS según la calificación
+                let gradeClass = 'grade-good';
+                if (nota.calificacion >= 17) {
+                    gradeClass = 'grade-excellent';
+                } else if (nota.calificacion < 14) {
+                    gradeClass = 'grade-poor';
+                }
+                
+                card.innerHTML = `
+                    <div class="grade-header">
+                        <h3 class="grade-title">${nota.materia}</h3>
+                        <div class="grade-value ${gradeClass}">${nota.calificacion.toFixed(1)}</div>
+                    </div>
+                    <div class="grade-details">
+                        <div class="grade-detail">
+                            <div class="grade-detail-label">Acumulado</div>
+                            <div class="grade-detail-value">${(nota.calificacion - 1).toFixed(1)}</div>
+                        </div>
+                        <div class="grade-detail">
+                            <div class="grade-detail-label">Examen</div>
+                            <div class="grade-detail-value">${(nota.calificacion + 0.5).toFixed(1)}</div>
+                        </div>
+                        <div class="grade-detail">
+                            <div class="grade-detail-label">Comport.</div>
+                            <div class="grade-detail-value">${(nota.calificacion + 1).toFixed(1)}</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Actualizar tabla de detalles
+        function actualizarTablaDetalles() {
+            const tbody = document.getElementById('tablaDetallesNotas');
+            tbody.innerHTML = '';
+            
+            if (notas.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <i class="fas fa-info-circle"></i> No hay detalles de calificaciones para mostrar
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Agregar todas las calificaciones detalladas
+            notas.forEach(nota => {
+                nota.detalles.forEach((detalle, index) => {
+                    const tr = document.createElement('tr');
+                    
+                    // Solo mostrar nombre de materia en la primera fila
+                    const materiaCell = index === 0 ? nota.materia : '';
+                    
+                    // Determinar badge según calificación
+                    let badgeClass = 'badge-warning';
+                    let badgeText = 'Regular';
+                    if (detalle.calificacion >= 17) {
+                        badgeClass = 'badge-success';
+                        badgeText = 'Excelente';
+                    } else if (detalle.calificacion < 14) {
+                        badgeClass = 'badge-danger';
+                        badgeText = 'Bajo';
+                    }
+                    
+                    tr.innerHTML = `
+                        <td><strong>${materiaCell}</strong></td>
+                        <td>${detalle.tipo}</td>
+                        <td><strong>${detalle.calificacion.toFixed(1)}</strong></td>
+                        <td>${detalle.peso}%</td>
+                        <td>${detalle.profesor}</td>
+                        <td>${new Date(detalle.fecha).toLocaleDateString('es-ES')}</td>
+                        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            document.getElementById('promedioGeneral').textContent = estadisticas.promedioGeneral.toFixed(1);
+            document.getElementById('materiasDestacadas').textContent = estadisticas.materiasDestacadas;
+            document.getElementById('progresoPeriodo').textContent = estadisticas.progresoPeriodo + '%';
+            document.getElementById('porcentajeAsistencia').textContent = estadisticas.porcentajeAsistencia + '%';
+            
+            // Actualizar información del grado/sección (simulada)
+            document.getElementById('studentGrade').textContent = '10° A - Secundaria';
+        }
+
+        // Mostrar loading
+        function showLoading() {
+            const container = document.getElementById('gradesCards');
+            const tbody = document.getElementById('tablaDetallesNotas');
+            
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando calificaciones...
+                    </div>
+                </div>
+            `;
+            
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 2rem;">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i> Cargando detalles...
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Mostrar error
+        function showError(message) {
+            // Podrías implementar un sistema de alertas aquí
+            console.error('Error:', message);
+            alert('Error: ' + message);
+        }
+
+        // Cerrar sesión
+        async function logout() {
+            if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
+                try {
+                    await fetch('/api/logout', { method: 'POST' });
+                    window.location.href = '/';
+                } catch (error) {
+                    console.error('Error al cerrar sesión:', error);
+                }
+            }
+        }
+
+        // Efecto de carga inicial para las tarjetas
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.grade-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
