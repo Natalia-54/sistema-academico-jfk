@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IE John F. Kennedy - Acceso Académico</title>
+    <style>
+        :root {
+            --primary-color: #2E7D32; /* Verde principal */
+            --primary-light: #4CAF50; /* Verde claro */
+            --primary-dark: #1B5E20; /* Verde oscuro */
+            --light-color: #FFFFFF; /* Blanco puro */
+            --dark-color: #212121; /* Texto oscuro */
+            --border-color: #E0E0E0; /* Bordes grises claros */
+            --text-secondary: #757575; /* Texto secundario */
+            --option-hover: #E8F5E9; /* Fondo hover verde muy claro */
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #4CAF50 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+        
+        .login-container {
+            background-color: var(--light-color);
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            width: 420px;
+            padding: 40px;
+            text-align: center;
+            border: none;
+            animation: fadeIn 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-light));
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
+            height: 90px;
+            margin-bottom: 25px;
+            transition: transform 0.4s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.08);
+        }
+        
+        .school-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .system-name {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .user-type {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+        
+        .user-option {
+            flex: 1;
+            text-align: center;
+            padding: 14px;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: var(--dark-color);
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-option:hover {
+            background-color: var(--option-hover);
+            border-color: var(--primary-light);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .user-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            font-weight: 600;
+            box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
+            transform: translateY(-5px);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(46, 125, 50, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+        }
+        
+        .btn-login {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-login:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+        }
+        
+        .btn-login:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-login:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-login:after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+        
+        .btn-login:active:after {
+            transform: scale(0, 0);
+            opacity: 0.3;
+            transition: 0s;
+        }
+        
+        .forgot-password {
+            margin-top: 20px;
+            display: block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .forgot-password:hover {
+            color: var(--primary-dark);
+            transform: translateX(5px);
+        }
+        
+        .forgot-password:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -3px;
+            left: 0;
+            background-color: var(--primary-dark);
+            transition: width 0.3s ease;
+        }
+        
+        .forgot-password:hover:after {
+            width: 100%;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: left;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .alert-error {
+            background-color: #FFEBEE;
+            border: 1px solid #F44336;
+            color: #C62828;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Efecto de onda al hacer clic */
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .admin-access {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #E3F2FD;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #1976D2;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <img src="logo-jfk.png" alt="Logo IE John F. Kennedy" class="logo">
+        <div class="school-name">Institución Educativa John F. Kennedy</div>
+        <div class="system-name">Sistema de Gestión Académica</div>
+        
+        <div class="alert alert-error" id="errorAlert"></div>
+        
+        <div class="user-type">
+            <div class="user-option" onclick="selectUserType('teacher')">Profesor</div>
+            <div class="user-option selected" onclick="selectUserType('student')">Estudiante</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="username" id="usernameLabel">Código de Estudiante</label>
+            <input type="text" id="username" placeholder="Ingrese su código" autocomplete="username">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        
+        <button class="btn-login" onclick="login()" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i> Ingresar al Sistema
+        </button>
+        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        
+        <div class="admin-access">
+            <strong>Acceso Administrativo:</strong> Usa "admin" / "admin123"
+        </div>
+        
+        <div class="footer">
+            © 2025 IE John F. Kennedy - Todos los derechos reservados
+        </div>
+    </div>
+
+    <script>
+        let currentUserType = 'student';
+        
+        // Seleccionar tipo de usuario
+        function selectUserType(type) {
+            currentUserType = type;
+            const options = document.querySelectorAll('.user-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target;
+            selectedOption.classList.add('selected');
+            
+            // Crear efecto de onda
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            
+            // Posicionar el efecto donde se hizo clic
+            const rect = selectedOption.getBoundingClientRect();
+            ripple.style.left = (event.clientX - rect.left) + 'px';
+            ripple.style.top = (event.clientY - rect.top) + 'px';
+            
+            selectedOption.appendChild(ripple);
+            
+            // Eliminar el efecto después de la animación
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+            
+            // Cambiar placeholder según tipo de usuario
+            const usernameInput = document.getElementById('username');
+            const label = document.querySelector('label[for="username"]');
+            
+            if(type === 'teacher') {
+                label.textContent = "Usuario o correo institucional";
+                usernameInput.placeholder = "Usuario o correo institucional";
+            } else {
+                label.textContent = "Código de Estudiante";
+                usernameInput.placeholder = "Código de estudiante";
+            }
+        }
+        
+        // Mostrar error
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Función de login
+        async function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if(!username || !password) {
+                showError("Por favor complete todos los campos");
+                return;
+            }
+            
+            // Mostrar animación de carga
+            const btn = document.getElementById('loginBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="loading"><i class="fas fa-spinner fa-spin"></i> Ingresando...</span>';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        userType: currentUserType
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.href = result.redirect;
+                } else {
+                    showError(result.error || 'Error en el inicio de sesión');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Error de
