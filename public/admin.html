@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IE John F. Kennedy - Panel Administrativo</title>
+    <style>
+        :root {
+            --primary-color: #2E7D32;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --secondary-color: #8BC34A;
+            --accent-color: #FFC107;
+            --light-color: #FFFFFF;
+            --dark-color: #212121;
+            --border-color: #E0E0E0;
+            --text-secondary: #757575;
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --danger-color: #F44336;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F5F7FA;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .school-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .school-logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-logout {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Contenedor principal */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            background-color: rgba(46, 125, 50, 0.05);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: rgba(0,0,0,0.05);
+        }
+        
+        /* Contenido de pestañas */
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Formularios */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-submit:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Tablas */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-edit {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+        
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-view {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Alertas */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+        
+        .alert-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        /* Estadísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+        
+        .badge-danger {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 0.8rem 1rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="school-info">
+                <img src="logo-jfk.png" alt="Logo IE John F. Kennedy" class="school-logo">
+                <div>
+                    <h1>IE John F. Kennedy</h1>
+                    <p>Panel Administrativo</p>
+                </div>
+            </div>
+            <div class="admin-controls">
+                <span id="adminName">Administrador</span>
+                <button class="btn btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Contenido principal -->
+    <div class="container">
+        <!-- Estadísticas rápidas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalEstudiantes">0</div>
+                <div class="stat-label">Estudiantes Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalProfesores">0</div>
+                <div class="stat-label">Profesores Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalSecciones">0</div>
+                <div class="stat-label">Secciones Activas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="anoEscolar">2025</div>
+                <div class="stat-label">Año Escolar</div>
+            </div>
+        </div>
+        
+        <!-- Pestañas -->
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('estudiantes')">
+                <i class="fas fa-user-graduate"></i> Gestión de Estudiantes
+            </div>
+            <div class="tab" onclick="openTab('profesores')">
+                <i class="fas fa-chalkboard-teacher"></i> Gestión de Profesores
+            </div>
+            <div class="tab" onclick="openTab('secciones')">
+                <i class="fas fa-users"></i> Secciones y Grados
+            </div>
+            <div class="tab" onclick="openTab('reportes')">
+                <i class="fas fa-chart-bar"></i> Reportes
+            </div>
+        </div>
+        
+        <!-- Contenido: Estudiantes -->
+        <div id="estudiantes" class="tab-content active">
+            <h2 class="section-title">
+                <i class="fas fa-user-graduate"></i> Registro de Estudiantes
+            </h2>
+            
+            <div class="alert alert-success" id="estudianteSuccess"></div>
+            <div class="alert alert-error" id="estudianteError"></div>
+            
+            <form id="formEstudiante" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codigo_estudiante">
+                            <i class="fas fa-id-card"></i> Código de Estudiante *
+                        </label>
+                        <input type="text" id="codigo_estudiante" name="codigo_usuario" class="form-control" 
+                               placeholder="EJ: EST-2025-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_estudiante">
+                            <i class="fas fa-envelope"></i> Email *
+                        </label>
+                        <input type="email" id="email_estudiante" name="email" class="form-control" 
+                               placeholder="ejemplo@jfk.edu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password_estudiante">
+                            <i class="fas fa-lock"></i> Contraseña *
+                        </label>
+                        <input type="password" id="password_estudiante" name="password" class="form-control" 
+                               placeholder="Mínimo 6 caracteres" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="nombres_estudiante">
+                            <i class="fas fa-user"></i> Nombres *
+                        </label>
+                        <input type="text" id="nombres_estudiante" name="nombres" class="form-control" 
+                               placeholder="Nombres completos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos_estudiante">
+                            <i class="fas fa-user"></i> Apellidos *
+                        </label>
+                        <input type="text" id="apellidos_estudiante" name="apellidos" class="form-control" 
+                               placeholder="Apellidos completos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_nacimiento">
+                            <i class="fas fa-calendar"></i> Fecha de Nacimiento
+                        </label>
+                        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="genero_estudiante">
+                            <i class="fas fa-venus-mars"></i> Género
+                        </label>
+                        <select id="genero_estudiante" name="genero" class="form-control">
+                            <option value="">Seleccionar</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="seccion_estudiante">
+                            <i class="fas fa-users"></i> Sección
+                        </label>
+                        <select id="seccion_estudiante" name="seccion_id" class="form-control">
+                            <option value="">Seleccionar sección</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono_estudiante">
+                            <i class="fas fa-phone"></i> Teléfono
+                        </label>
+                        <input type="tel" id="telefono_estudiante" name="telefono" class="form-control" 
+                               placeholder="+51 XXX XXX XXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion_estudiante">
+                            <i class="fas fa-home"></i> Dirección
+                        </label>
+                        <textarea id="direccion_estudiante" name="direccion" class="form-control" 
+                                  rows="3" placeholder="Dirección completa"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="contacto_emergencia">
+                            <i class="fas fa-user-plus"></i> Contacto de Emergencia
+                        </label>
+                        <input type="text" id="contacto_emergencia" name="nombre_contacto_emergencia" 
+                               class="form-control" placeholder="Nombre del contacto">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono_emergencia">
+                            <i class="fas fa-phone-alt"></i> Teléfono de Emergencia
+                        </label>
+                        <input type="tel" id="telefono_emergencia" name="telefono_contacto_emergencia" 
+                               class="form-control" placeholder="Teléfono de emergencia">
+                    </div>
+                    <div class="form-group">
+                        <label for="foto_estudiante">
+                            <i class="fas fa-camera"></i> Foto
+                        </label>
+                        <input type="file" id="foto_estudiante" name="foto" class="form-control" 
+                               accept="image/*">
+                        <small style="color: var(--text-secondary);">Formatos: JPG, PNG, GIF (Máx. 5MB)</small>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" id="btnSubmitEstudiante">
+                    <i class="fas fa-save"></i> Registrar Estudiante
+                </button>
+            </form>
+            
+            <h3 class="section-title" style="margin-top: 3rem;">
+                <i class="fas fa-list"></i> Lista de Estudiantes
+            </h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Sección</th>
+                            <th>Teléfono</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaEstudiantes">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                                <div class="loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Cargando estudiantes...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Contenido: Profesores -->
+        <div id="profesores" class="tab-content">
+            <h2 class="section-title">
+                <i class="fas fa-chalkboard-teacher"></i> Registro de Profesores
+            </h2>
+            
+            <div class="alert alert-success" id="profesorSuccess"></div>
+            <div class="alert alert-error" id="profesorError"></div>
+            
+            <form id="formProfesor" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codigo_profesor">
+                            <i class="fas fa-id-card"></i> Código de Profesor *
+                        </label>
+                        <input type="text" id="codigo_profesor" name="codigo_usuario" class="form-control" 
+                               placeholder="EJ: PROF-2025-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_profesor">
+                            <i class="fas fa-envelope"></i> Email *
+                        </label>
+                        <input type="email" id="email_profesor" name="email" class="form-control" 
+                               placeholder="profesor@jfk.edu" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password_profesor">
+                            <i class="fas fa-lock"></i> Contraseña *
+                        </label>
+                        <input type="password" id="password_profesor" name="password" class="form-control" 
+                               placeholder="Mínimo 6 caracteres" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="nombres_profesor">
+                            <i class="fas fa-user"></i> Nombres *
+                        </label>
+                        <input type="text" id="nombres_profesor" name="nombres" class="form-control" 
+                               placeholder="Nombres completos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos_profesor">
+                            <i class="fas fa-user"></i> Apellidos *
+                        </label>
+                        <input type="text" id="apellidos_profesor" name="apellidos" class="form-control" 
+                               placeholder="Apellidos completos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="especialidad">
+                            <i class="fas fa-book"></i> Especialidad
+                        </label>
+                        <input type="text" id="especialidad" name="especialidad" class="form-control" 
+                               placeholder="Ej: Matemáticas, Ciencias, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="titulo_academico">
+                            <i class="fas fa-graduation-cap"></i> Título Académico
+                        </label>
+                        <input type="text" id="titulo_academico" name="titulo_academico" class="form-control" 
+                               placeholder="Título profesional">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_contratacion">
+                            <i class="fas fa-calendar-check"></i> Fecha de Contratación
+                        </label>
+                        <input type="date" id="fecha_contratacion" name="fecha_contratacion" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono_profesor">
+                            <i class="fas fa-phone"></i> Teléfono
+                        </label>
+                        <input type="tel" id="telefono_profesor" name="telefono" class="form-control" 
+                               placeholder="+51 XXX XXX XXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="email_institucional">
+                            <i class="fas fa-envelope-open"></i> Email Institucional
+                        </label>
+                        <input type="email" id="email_institucional" name="email_institucional" class="form-control" 
+                               placeholder="usuario@institucion.edu">
+                    </div>
+                    <div class="form-group">
+                        <label for="foto_profesor">
+                            <i class="fas fa-camera"></i> Foto
+                        </label>
+                        <input type="file" id="foto_profesor" name="foto" class="form-control" 
+                               accept="image/*">
+                        <small style="color: var(--text-secondary);">Formatos: JPG, PNG, GIF (Máx. 5MB)</small>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" id="btnSubmitProfesor">
+                    <i class="fas fa-save"></i> Registrar Profesor
+                </button>
+            </form>
+            
+            <h3 class="section-title" style="margin-top: 3rem;">
+                <i class="fas fa-list"></i> Lista de Profesores
+            </h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Especialidad</th>
+                            <th>Teléfono</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProfesores">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                                <div class="loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Cargando profesores...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Contenido: Secciones -->
+        <div id="secciones" class="tab-content">
+            <h2 class="section-title">
+                <i class="fas fa-users"></i> Gestión de Secciones y Grados
+            </h2>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Grado</th>
+                            <th>Sección</th>
+                            <th>Tutor</th>
+                            <th>Capacidad</th>
+                            <th>Estudiantes</th>
+                            <th>Año Escolar</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaSecciones">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                                <div class="loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Cargando secciones...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Contenido: Reportes -->
+        <div id="reportes" class="tab-content">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar"></i> Reportes del Sistema
+            </h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="reporteAprobados">0%</div>
+                    <div class="stat-label">Tasa de Aprobación</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="reporteAsistencia">0%</div>
+                    <div class="stat-label">Asistencia Promedio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="reporteMaterias">0</div>
+                    <div class="stat-label">Materias Activas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="reportePromedio">0.0</div>
+                    <div class="stat-label">Promedio General</div>
+                </div>
+            </div>
+            
+            <div class="table-container" style="margin-top: 2rem;">
+                <h3 style="padding: 1rem; margin: 0; background: var(--primary-color); color: white;">
+                    <i class="fas fa-history"></i> Actividad Reciente
+                </h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Acción</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                <i class="fas fa-info-circle"></i> Los reportes detallados estarán disponibles en futuras actualizaciones
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let estudiantes = [];
+        let profesores = [];
+        let secciones = [];
+        let currentUser = null;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        // Verificar autenticación
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user');
+                if (!response.ok) {
+                    window.location.href = '/';
+                    return;
+                }
+                currentUser = await response.json();
+                
+                if (currentUser.tipo !== 'administrador') {
+                    window.location.href = '/';
+                    return;
+                }
+                
+                document.getElementById('adminName').textContent = currentUser.nombres + ' ' + currentUser.apellidos;
+                
+                // Cargar datos iniciales
+                await loadSecciones();
+                await loadEstudiantes();
+                await loadProfesores();
+                await loadStats();
+                
+            } catch (error) {
+                console.error('Error verificando autenticación:', error);
+                window.location.href = '/';
+            }
+        }
+
+        // Cargar secciones para dropdown
+        async function loadSecciones() {
+            try {
+                const response = await fetch('/api/secciones');
+                if (!response.ok) throw new Error('Error al cargar secciones');
+                
+                secciones = await response.json();
+                
+                const select = document.getElementById('seccion_estudiante');
+                select.innerHTML = '<option value="">Seleccionar sección</option>';
+                
+                secciones.forEach(seccion => {
+                    const option = document.createElement('option');
+                    option.value = seccion.id;
+                    option.textContent = `${seccion.grado_nombre} - ${seccion.nombre}`;
+                    if (seccion.tutor_nombres) {
+                        option.textContent += ` (Tutor: ${seccion.tutor_nombres} ${seccion.tutor_apellidos})`;
+                    }
+                    select.appendChild(option);
+                });
+                
+                // Actualizar tabla de secciones
+                updateTablaSecciones();
+            } catch (error) {
+                console.error('Error cargando secciones:', error);
+                showError('estudianteError', 'Error al cargar las secciones');
+            }
+        }
+
+        // Cargar estudiantes
+        async function loadEstudiantes() {
+            try {
+                const response = await fetch('/api/estudiantes');
+                if (!response.ok) throw new Error('Error al cargar estudiantes');
+                
+                estudiantes = await response.json();
+                updateTablaEstudiantes();
+                updateStats();
+            } catch (error) {
+                console.error('Error cargando estudiantes:', error);
+                showError('estudianteError', 'Error al cargar los estudiantes');
+            }
+        }
+
+        // Cargar profesores
+        async function loadProfesores() {
+            try {
+                const response = await fetch('/api/profesores');
+                if (!response.ok) throw new Error('Error al cargar profesores');
+                
+                profesores = await response.json();
+                updateTablaProfesores();
+                updateStats();
+            } catch (error) {
+                console.error('Error cargando profesores:', error);
+                showError('profesorError', 'Error al cargar los profesores');
+            }
+        }
+
+        // Cargar estadísticas
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/estadisticas');
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('totalEstudiantes').textContent = stats.totalEstudiantes;
+                    document.getElementById('totalProfesores').textContent = stats.totalProfesores;
+                    document.getElementById('totalSecciones').textContent = stats.totalSecciones;
+                    document.getElementById('anoEscolar').textContent = stats.anoEscolar;
+                }
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+            }
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            document.getElementById('totalEstudiantes').textContent = 
+                estudiantes.filter(e => e.usuario_estado === 'activo').length;
+            document.getElementById('totalProfesores').textContent = 
+                profesores.filter(p => p.usuario_estado === 'activo').length;
+            document.getElementById('totalSecciones').textContent = secciones.length;
+        }
+
+        // Formulario de estudiantes
+        document.getElementById('formEstudiante').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const btn = document.getElementById('btnSubmitEstudiante');
+            const originalText = btn.innerHTML;
+            
+            // Validación básica
+            if (!formData.get('codigo_usuario') || !formData.get('email') || !formData.get('password') || 
+                !formData.get('nombres') || !formData.get('apellidos')) {
+                showError('estudianteError', 'Por favor complete todos los campos obligatorios (*)');
+                return;
+            }
+            
+            if (formData.get('password').length < 6) {
+                showError('estudianteError', 'La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+            
+            btn.innerHTML = '<span class="loading"><i class="fas fa-spinner fa-spin"></i> Registrando...</span>';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/estudiantes', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('estudianteSuccess', result.message);
+                    this.reset();
+                    await loadEstudiantes();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error registrando estudiante:', error);
+                showError('estudianteError', error.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        // Formulario de profesores
+        document.getElementById('formProfesor').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const btn = document.getElementById('btnSubmitProfesor');
+            const originalText = btn.innerHTML;
+            
+            // Validación básica
+            if (!formData.get('codigo_usuario') || !formData.get('email') || !formData.get('password') || 
+                !formData.get('nombres') || !formData.get('apellidos')) {
+                showError('profesorError', 'Por favor complete todos los campos obligatorios (*)');
+                return;
+            }
+            
+            if (formData.get('password').length < 6) {
+                showError('profesorError', 'La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+            
+            btn.innerHTML = '<span class="loading"><i class="fas fa-spinner fa-spin"></i> Registrando...</span>';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/profesores', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('profesorSuccess', result.message);
+                    this.reset();
+                    await loadProfesores();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error registrando profesor:', error);
+                showError('profesorError', error.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        // Mostrar mensaje de éxito
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        // Mostrar mensaje de error
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        // Actualizar tablas
+        function updateTablaEstudiantes() {
+            const tbody = document.getElementById('tablaEstudiantes');
+            
+            if (estudiantes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <i class="fas fa-user-graduate"></i> No hay estudiantes registrados
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            estudiantes.forEach(estudiante => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${estudiante.codigo_usuario}</strong></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            ${estudiante.foto_url ? 
+                                `<img src="${estudiante.foto_url}" alt="Foto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">` : 
+                                `<div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${estudiante.nombres.charAt(0)}</div>`
+                            }
+                            <div>
+                                <div><strong>${estudiante.nombres} ${estudiante.apellidos}</strong></div>
+                                <small style="color: var(--text-secondary);">${estudiante.fecha_nacimiento || 'Sin fecha'}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${estudiante.email || '-'}</td>
+                    <td>${estudiante.seccion_nombre || '<span style="color: var(--warning-color);">Sin asignar</span>'}</td>
+                    <td>${estudiante.telefono || '-'}</td>
+                    <td>
+                        <span class="badge ${estudiante.usuario_estado === 'activo' ? 'badge-success' : 'badge-danger'}">
+                            ${estudiante.usuario_estado}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-view" onclick="verEstudiante(${estudiante.id})" title="Ver detalles">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn-action btn-edit" onclick="editarEstudiante(${estudiante.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-delete" onclick="eliminarEstudiante(${estudiante.id})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateTablaProfesores() {
+            const tbody = document.getElementById('tablaProfesores');
+            
+            if (profesores.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <i class="fas fa-chalkboard-teacher"></i> No hay profesores registrados
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            profesores.forEach(profesor => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${profesor.codigo_usuario}</strong></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            ${profesor.foto_url ? 
+                                `<img src="${profesor.foto_url}" alt="Foto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">` : 
+                                `<div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${profesor.nombres.charAt(0)}</div>`
+                            }
+                            <div>
+                                <div><strong>${profesor.nombres} ${profesor.apellidos}</strong></div>
+                                <small style="color: var(--text-secondary);">${profesor.especialidad || 'Sin especialidad'}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${profesor.email || '-'}</td>
+                    <td>${profesor.especialidad || '-'}</td>
+                    <td>${profesor.telefono || '-'}</td>
+                    <td>
+                        <span class="badge ${profesor.usuario_estado === 'activo' ? 'badge-success' : 'badge-danger'}">
+                            ${profesor.usuario_estado}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-view" onclick="verProfesor(${profesor.id})" title="Ver detalles">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn-action btn-edit" onclick="editarProfesor(${profesor.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-delete" onclick="eliminarProfesor(${profesor.id})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateTablaSecciones() {
+            const tbody = document.getElementById('tablaSecciones');
+            
+            if (secciones.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <i class="fas fa-users"></i> No hay secciones registradas
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            secciones.forEach(seccion => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${seccion.grado_nombre}</strong></td>
+                    <td><strong>${seccion.nombre}</strong></td>
+                    <td>${seccion.tutor_nombres ? `${seccion.tutor_nombres} ${seccion.tutor_apellidos}` : '<span style="color: var(--warning-color);">Sin asignar</span>'}</td>
+                    <td>${seccion.capacidad_maxima || 'Ilimitada'}</td>
+                    <td>
+                        <span class="badge ${seccion.total_estudiantes > 0 ? 'badge-success' : 'badge-warning'}">
+                            ${seccion.total_estudiantes} estudiantes
+                        </span>
+                    </td>
+                    <td>${seccion.ano_escolar}</td>
+                    <td>
+                        <span class="badge badge-success">Activa</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Navegación entre pestañas
+        function openTab(tabName) {
+            // Ocultar todos los contenidos de pestañas
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remover clase active de todas las pestañas
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Mostrar la pestaña específica
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Cerrar sesión
+        async function logout() {
+            if (confirm("¿Estás seguro que deseas cerrar sesión?")) {
+                try {
+                    await fetch('/api/logout', { method: 'POST' });
+                    window.location.href = '/';
+                } catch (error) {
+                    console.error('Error al cerrar sesión:', error);
+                }
+            }
+        }
+
+        // Funciones para acciones (placeholders)
+        function verEstudiante(id) {
+            alert(`Ver detalles del estudiante con ID: ${id}\n\nEsta funcionalidad estará disponible en la próxima actualización.`);
+        }
+
+        function editarEstudiante(id) {
+            alert(`Editar estudiante con ID: ${id}\n\nEsta funcionalidad estará disponible en la próxima actualización.`);
+        }
+
+        function eliminarEstudiante(id) {
+            if (confirm('¿Está seguro de que desea eliminar este estudiante?\n\nEsta acción no se puede deshacer.')) {
+                alert(`Eliminar estudiante con ID: ${id}\n\nEsta funcionalidad estará disponible en la próxima actualización.`);
+            }
+        }
+
+        function verProfesor(id) {
+            alert(`Ver detalles del profesor con ID: ${id}\n\nEsta funcionalidad estará disponible en la próxima actualización.`);
+        }
+
+        function editarProfesor(id) {
+            alert(`Editar profesor con ID: ${id}\n\nEsta funcionalidad estará disponible en la próxima actualización.`);
+        }
+
+        function eliminarProfesor(id) {
+            if (confirm('¿Está seguro de que desea eliminar este profesor?\n\nEsta acción no se puede deshacer.')) {
+                alert(`Eliminar profesor con ID: ${id}\n\nEsta funcionalidad estará disponible en la próxima actualización.`);
+            }
+        }
+
+        // Limpiar formularios al cambiar de pestaña
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Ocultar alertas
+                document.querySelectorAll('.alert').forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
